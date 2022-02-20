@@ -32,6 +32,17 @@ service.AddAuthorization(options =>
     });
 });
 
+service.AddCors(options =>
+{
+    // this defines a CORS policy called "default"
+    options.AddPolicy("default", policy =>
+    {
+        policy.WithOrigins("https://localhost:5003")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,7 +52,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("default");
 
 // Add the authentication middleware to the pipline so authentication will be performed automatically on every call into the host.
 app.UseAuthentication();
